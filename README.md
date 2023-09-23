@@ -4,20 +4,7 @@ This is an Express service that provides authorization functionality and include
 It also uses MongoDB as the database, along with the JSON Web Token (JWT).
 
 ## Project Structure
- - `controllers`
-  - `commentController.js`:
-  - `recipeController.js`:
- - `database`
-  - `Comment`:
-  - `db.json`:
-  - `Recipe`:
-  - `utils.js`:
- - `routes`
-  - `recipeRoutes.js`:
- - `services`
-  - `commentService.js`:
-  - `recipeService.js`:
- - `index.js`: The main entry point of the application.
+- TBD
 
 ## Prerequisites
 Before running the application, make sure you have the following installed:
