@@ -1,64 +1,72 @@
 const { status } = require("express/lib/response");
 const commentService = require("../services/commentService");
+const { json } = require("body-parser");
 
-const getAllCommentsForRecipe = (req, res) => {
+const getAllCommentsForRecipe = async (req, res) => {
   const {
     params: { recipeId },
   } = req;
-  if (!recipeId) {
-    res
-      .status(404)
-      .send({
-        status: "FAILED",
-        data: {
-          error:
-            "The requested recipe doesn't exist",
-        },
-      });
-    return;
-  }
   try {
-    const comments = commentService.getAllCommentsForRecipe(recipeId);
-    res.send({ status: "OK", data: comments });
+    const comments = await commentService.getAllCommentsForRecipe(recipeId);
+    res
+      .status(200)
+      .json({
+        status: "OK",
+        data: comments,
+      });
   } catch (error) {
     res
-    .status(error?.status || 500)
-    .send({ status: "FAILED", data: { error: error?.message || error } });
+      .status(error?.status || 500)
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
 };
 
-const getOneComment = (req, res) => {
+const getOneComment = async (req, res) => {
   const {
-    params: { recipeId, commentId },
+    params: { commentId },
   } = req;
-  if (!recipeId || !commentId) {
-    res
-      .status(404)
-      .send({
-        status: "FAILED",
-        data: {
-          error:
-            "The requested recipe or comment don't exist",
-        },
-      });
-    return;
-  }
   try {
-    const comment = commentService.getOneComment(recipeId, commentId);
-    res.send({ status: "OK", data: comment });
+    const comment = await commentService.getOneComment(commentId);
+    if(!comment) {
+      res
+        .status(404)
+        .json({
+          status: "FAILED",
+          data: {
+            error:
+              "The requested comment doesn't exist",
+          },  
+        });
+    } else {
+      res
+        .status(200)
+        .json({
+          status: "OK",
+          data: comment,
+        });
+    }
   } catch (error) {
     res
-    .status(error?.status || 500)
-    .send({ status: "FAILED", data: { error: error?.message || error } });
+      .status(error?.status || 500)
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
-}
+};
 
-const createNewComment = (req, res) => {
-  const { body } = req;
+const createNewCommentForRecipe = async (req, res) => {
+  const {
+    body,
+    params: { recipeId },
+  } = req;
   if ( !body.comment ) {
     res
       .status(400)
-      .send({
+      .json({
         status: "FAILED",
         data: {
           error:
@@ -66,21 +74,6 @@ const createNewComment = (req, res) => {
         },
       });
     return;  
-  }
-  const {
-    params: { recipeId },
-  } = req;
-  if (!recipeId) {
-    res
-      .status(404)
-      .send({
-        status: "FAILED",
-        data: {
-          error:
-            "The requested recipe doesn't exist",
-        },
-      });
-    return;
   }
   const newComment = {
     comment: body.comment,
@@ -90,24 +83,43 @@ const createNewComment = (req, res) => {
     recipeId: recipeId,
   }
   try {
-    const createdComment = commentService.createNewComment(newComment, recipeId);
-    res.status(201).send({ status: "OK", data: createdComment });
+    const createdComment = await commentService.createNewCommentForRecipe(newComment, recipeId);
+    res
+      .status(201)
+      .json({ 
+        status: "OK", 
+        data: createdComment,
+      });
   } catch (error) {
     res
       .status(error?.status || 500)
-      .send({ status: "FAILED", data: { error: error?.message || error } });
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
-}
+};
 
-const updateOneComment = (req, res) => {
+const updateOneComment = async (req, res) => {
   const {
     body,
-    params: { recipeId, commentId}, 
+    params: { commentId }, 
   } = req;
-  if (!recipeId || !commentId) {
+  if (Object.keys(body).length === 0) {
+    res
+      .status(400)
+      .json({
+        status: "FAILED",
+        data: {
+          error: "The request body is empty. Please provide data for the update."
+        }
+      });
+    return;
+  }
+  if (!commentId) {   // Is this needed?
     res
       .status(404)
-      .send({
+      .json({
         status: "FAILED",
         data: {
           error:
@@ -117,23 +129,31 @@ const updateOneComment = (req, res) => {
     return;  
   }
   try {
-    const updatedComment = commentService.updateOneComment(recipeId, commentId, body)
-    res.send({ status: "OK", data: updatedComment });
+    const updatedComment = await commentService.updateOneComment(commentId, body);
+    res
+      .status(201)
+      .json({ 
+        status: "OK", 
+        data: updatedComment,
+      });
   } catch (error) {
     res
       .status(error?.status || 500)
-      .send({ status: "FAILED", data: { error: error?.message || error } })
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
 };
 
-const deleteOneComment = (req, res) => {
+const deleteOneComment = async (req, res) => {
   const {
-    params: { recipeId, commentId },
+    params: { commentId },
   } = req;
-  if (!recipeId || !commentId) {
+  if (!commentId) {      // Is this needed?
     res
       .status(404)
-      .send({
+      .json({
         status: "FAILED",
         data: {
           error:
@@ -143,19 +163,26 @@ const deleteOneComment = (req, res) => {
     return;
   }
   try {
-    commentService.deleteOneComment(recipeId, commentId);
-    res.status(204).send({ status: "OK" });
+    await commentService.deleteOneComment(commentId);
+    res
+      .status(204)
+      .json({ 
+        status: "OK" 
+      });
   } catch (error) {
     res
       .status(error?.status || 500)
-      .send({ status: "FAILED", data: { error: error?.message || error } });
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
-}
+};
 
 module.exports = { 
   getAllCommentsForRecipe,
   getOneComment,
-  createNewComment,
+  createNewCommentForRecipe,
   updateOneComment,
   deleteOneComment,
 };

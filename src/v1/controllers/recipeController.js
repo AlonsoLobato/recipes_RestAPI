@@ -1,44 +1,61 @@
 const { status } = require("express/lib/response");
-const recipeService = require("../services/recipeService")
+const recipeService = require("../services/recipeService");
+const { json } = require("body-parser");
 
-const getAllRecipes = (req, res) => {
+const getAllRecipes = async (req, res) => {
   try {
-    const allRecipes = recipeService.getAllRecipes();
-    res.send({ status: "OK", data: allRecipes });
+    const allRecipes = await recipeService.getAllRecipes();
+    if(allRecipes.length === 0) {
+      res
+        .status(404)
+        .json({
+          status: "FAILED",
+          data: {
+            error:
+              "There are no recipes to display",
+          },  
+        });
+    } else {
+      res
+        .status(200)
+        .json({
+          status: "OK",
+          data: allRecipes,
+        });
+    }
   } catch (error) {
     res
-    .status(error?.status || 500)
-    .send({ status: "FAILED", data: { error: error?.message || error } });
+      .status(error?.status || 500)
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
 };
 
-const getOneRecipe = (req, res) => {
+const getOneRecipe = async (req, res) => {
   const {
     params: { recipeId },
   } = req;
-  if (!recipeId) {
-    res
-      .status(404)
-      .send({
-        status: "FAILED",
-        data: {
-          error:
-            "The requested recipe doesn't exist",
-        },
-      });
-    return;
-  }
   try {
-    const recipe = recipeService.getOneRecipe(recipeId);
-    res.send({ status: "OK", data: recipe });
+    const recipe = await recipeService.getOneRecipe(recipeId);
+    res
+      .status(200)
+      .json({ 
+        status: "OK", 
+        data: recipe 
+      });
   } catch (error) {
     res
-    .status(error?.status || 500)
-    .send({ status: "FAILED", data: { error: error?.message || error } });
+      .status(error?.status || 500)
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
 };
 
-const createNewRecipe = (req, res) => {
+const createNewRecipe = async (req, res) => {
   const { body } = req;
   if (
     !body.name ||
@@ -52,7 +69,7 @@ const createNewRecipe = (req, res) => {
   ) {
     res
       .status(400)
-      .send({
+      .json({
         status: "FAILED",
         data: {
           error:
@@ -73,65 +90,74 @@ const createNewRecipe = (req, res) => {
     instructions: body.instructions,
   }
   try {
-    const createdRecipe = recipeService.createNewRecipe(newRecipe);
-    res.status(201).send({ status: "OK", data: createdRecipe });
+    const createdRecipe = await recipeService.createNewRecipe(newRecipe);
+    res
+      .status(201)
+      .json({ 
+        status: "OK", 
+        data: createdRecipe,
+    });
   } catch (error) {
     res
       .status(error?.status || 500)
-      .send({ status: "FAILED", data: { error: error?.message || error } });
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
 };
 
-const updateOneRecipe = (req, res) => {
+const updateOneRecipe = async (req, res) => {
   const {
     body,
     params: { recipeId },
   } = req;
-  if (!recipeId) {
+  if (Object.keys(body).length === 0) {
     res
       .status(400)
-      .send({
+      .json({
         status: "FAILED",
         data: {
-          error: 
-            "The requested update couldn't be completed"
-        },
+          error: "The request body is empty. Please provide data for the update."
+        }
       });
     return;
   }
   try {
-    const updatedRecipe = recipeService.updateOneRecipe(recipeId, body);
-    res.send({ status: "OK", data: updatedRecipe });
+    const updatedRecipe = await recipeService.updateOneRecipe(recipeId, body);
+    res
+      .json({ 
+        status: "OK", 
+        data: updatedRecipe 
+      });
   } catch (error) {
     res
       .status(error?.status || 500)
-      .send({ status: "FAILED", data: { error: error?.message || error } });
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
 };
 
-const deleteOneRecipe = (req, res) => {
+const deleteOneRecipe = async (req, res) => {
   const {
     params: { recipeId }
   } = req;
-  if (!recipeId) {
-    res
-      .status(400)
-      .send({ 
-        status: "FAILED",
-        data: {
-          error:
-            "The requested deletion couldn't be completed"
-        },
-      });
-    return;
-  }
   try {
-    recipeService.deleteOneRecipe(recipeId);
-    res.status(204).send({ status: "OK" });
+    await recipeService.deleteOneRecipe(recipeId);
+    res
+      .status(204)
+      .json({ 
+        status: "OK" 
+      });
   } catch (error) {
     res
       .status(error?.status || 500)
-      .send({ status: "FAILED", data: { error: error?.message || error } });
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
 };
 

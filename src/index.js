@@ -1,17 +1,28 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const v1RecipeRouter = require("./v1/routes/recipeRoutes");
-
 const app = express(); 
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
+
 const PORT = process.env.PORT || 3000; 
 
-// to be able to receive JSON data inside our controllers under req.body.
+// Connect to DB
+mongoose.connect(process.env.DB_CONNECT);
+
+// Import Routes
+const v1RecipeRouter = require("./v1/routes/recipeRoutes");
+const v1CommentRouter = require("./v1/routes/commentRoutes");
+
+// Route Middleware
+app.use("/api/v1/recipes", v1RecipeRouter);
+app.use("/api/v1/recipes/:recipeId/comments", v1CommentRouter);
+
+// Middleware
+// Enables to receive JSON data inside our controllers under 'req.body'
 app.use(bodyParser.json());
 
-// Route Middlewares
-app.use("/api/v1/recipes", v1RecipeRouter);
-
 app.listen(PORT, () => { 
-    console.log(`API is listening on port ${PORT}`); 
+    console.log(`Server up and running - API listening on port ${PORT}`); 
 });
 
