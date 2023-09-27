@@ -1,6 +1,6 @@
 const express = require("express");
 const commentController = require("../controllers/commentController");
-const router = express.Router({ mergeParams: true });
+const router = express.Router({ mergeParams: true });  // is mergeParams needed?
 
 // CRUD for comments
 router.get("/", commentController.getAllCommentsForRecipe);

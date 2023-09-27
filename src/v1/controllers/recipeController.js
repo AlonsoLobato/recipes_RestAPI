@@ -11,8 +11,7 @@ const getAllRecipes = async (req, res) => {
         .json({
           status: "FAILED",
           data: {
-            error:
-              "There are no recipes to display",
+            error: "There are no recipes to display",
           },  
         });
     } else {

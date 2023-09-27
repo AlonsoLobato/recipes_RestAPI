@@ -36,8 +36,7 @@ const getOneComment = async (req, res) => {
         .json({
           status: "FAILED",
           data: {
-            error:
-              "The requested comment doesn't exist",
+            error: "The requested comment doesn't exist",
           },  
         });
     } else {
@@ -69,8 +68,7 @@ const createNewCommentForRecipe = async (req, res) => {
       .json({
         status: "FAILED",
         data: {
-          error:
-            "One of the following keys is missing or is empty in request body: 'comment'" 
+          error: "One of the following keys is missing or is empty in request body: 'comment'" 
         },
       });
     return;  
@@ -122,8 +120,7 @@ const updateOneComment = async (req, res) => {
       .json({
         status: "FAILED",
         data: {
-          error:
-            "The requested update couldn't be completed",
+          error: "The requested update couldn't be completed",
         },
       });
     return;  
@@ -156,8 +153,7 @@ const deleteOneComment = async (req, res) => {
       .json({
         status: "FAILED",
         data: {
-          error:
-            "The requested recipe or comment don't exist",
+          error: "The requested recipe or comment don't exist",
         },
       });
     return;
