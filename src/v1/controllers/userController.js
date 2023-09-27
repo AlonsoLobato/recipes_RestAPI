@@ -161,10 +161,43 @@ const deleteOneUser = async (req, res) => {
   }
 };
 
+const loginUser = async (req, res) => {
+  const { body } = req;
+  // Validate user input
+  const { error } = userValidation.loginValidation(body);
+  if (error) {
+    res
+      .status(400)
+      .json({
+        status: "FAILED",
+        data: {
+          error: error.details[0].message
+        }
+      });
+  } else {
+    try {
+      await userService.loginUser(body);
+      res
+        .status(200)
+        .json({ 
+          status: "Logged in successfully" 
+        });
+    } catch (error) {
+      res
+        .status(error?.status || 500)
+        .json({ 
+          status: "FAILED", 
+          data: { error: error?.message || error } 
+        });
+    }
+  }
+};
+
 module.exports = {
   getAllUsers,
   getOneUser,
   createNewUser,
   updateOneUser,
   deleteOneUser,
+  loginUser,
 }

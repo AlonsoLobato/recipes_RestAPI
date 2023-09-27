@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const bcrypt = require("bcryptjs");
 
 const getAllUsers = async () => {
   try {
@@ -107,10 +108,32 @@ const deleteOneUser = async (userId) => {
   }
 };
 
+const loginUser = async (userData) => {
+  try {
+    const userToLogin = await User.findOne({ email: userData.email });
+    if (!userToLogin) {
+      throw {
+        status: 400,
+        message: `There is no account with the entered email`,
+      };
+    }
+    const validPass = await bcrypt.compare(userData.password, userToLogin.password);
+    if (!validPass) {
+      throw {
+        status: 400,
+        message: `Invalid password`,
+      };
+    }
+  } catch (error) {
+    throw { status: error?.status || 500, message: error?.message || error }
+  }
+};
+
 module.exports = {
   getAllUsers,
   getOneUser,
   createNewUser,
   updateOneUser,
   deleteOneUser,
+  loginUser,
 };
