@@ -26,11 +26,12 @@ const commentSchema = new mongoose.Schema({
     default: Date.now,
   },
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   recipeId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
 });
