@@ -72,7 +72,10 @@ const updateOneUser = async (userId, changes) => {
     }
     const updatedUser = {
       ...userToUpdate.toObject(),
-      ...changes,
+      name: changes.name || userToUpdate.name,
+      email: changes.email || userToUpdate.email,
+      password: changes.password || userToUpdate.password,
+      dateOfBirth: changes.dateOfBirth || userToUpdate.dateOfBirth,
       updatedAt: new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
     }
     await User.findByIdAndUpdate(userId, updatedUser);

@@ -2,6 +2,7 @@ const { status } = require("express/lib/response");
 const userService = require("../services/userService");
 const { json } = require("body-parser");
 const userValidation = require("../validations/userValidation");
+const bcrypt = require("bcryptjs");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -47,11 +48,11 @@ const getOneUser = async (req, res) => {
       });
   } catch (error) {
     res
-    .status(error?.status || 500)
-    .json({ 
-      status: "FAILED", 
-      data: { error: error?.message || error } 
-    });
+      .status(error?.status || 500)
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
 };
 
@@ -69,13 +70,17 @@ const createNewUser = async (req, res) => {
         }
       });
   } else {
-    const newUser = {
-      name: body.name,
-      email: body.email,
-      password: body.password,
-      dateOfBirth: body.dateOfBirth,
-    }
     try {
+      // Hashing password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(body.password, salt);
+
+      const newUser = {
+        name: body.name,
+        email: body.email,
+        password: hashedPassword,
+        dateOfBirth: body.dateOfBirth,
+      }
       const createdUser = await userService.createNewUser(newUser);
       res
         .status(201)
@@ -85,11 +90,11 @@ const createNewUser = async (req, res) => {
       });
     } catch (error) {
       res
-      .status(error?.status || 500)
-      .json({ 
-        status: "FAILED", 
-        data: { error: error?.message || error } 
-      });
+        .status(error?.status || 500)
+        .json({ 
+          status: "FAILED", 
+          data: { error: error?.message || error } 
+        });
     }
   }
 }
@@ -100,7 +105,7 @@ const updateOneUser = async (req, res) => {
     params: { userId },
   } = req;
   // Validate user input
-  const { error } = userValidation.registerValidation(body);
+  const { error } = userValidation.updateValidation(body);
   if (error) {
     res
       .status(400)
@@ -112,19 +117,25 @@ const updateOneUser = async (req, res) => {
       });
   } else {
     try {
+      if (body.password) {
+        // Hashing password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(body.password, salt);
+        body.password = hashedPassword;
+      }
       const updatedUser = await userService.updateOneUser(userId, body);
       res
-      .json({ 
-        status: "OK", 
-        data: updatedUser 
-      });
+        .json({ 
+          status: "OK", 
+          data: updatedUser 
+        });
     } catch (error) {
       res
-      .status(error?.status || 500)
-      .json({ 
-        status: "FAILED", 
-        data: { error: error?.message || error } 
-      });
+        .status(error?.status || 500)
+        .json({ 
+          status: "FAILED", 
+          data: { error: error?.message || error } 
+        });
     }
   }
 };
@@ -142,11 +153,11 @@ const deleteOneUser = async (req, res) => {
       });
   } catch (error) {
     res
-    .status(error?.status || 500)
-    .json({ 
-      status: "FAILED", 
-      data: { error: error?.message || error } 
-    });
+      .status(error?.status || 500)
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
   }
 };
 
