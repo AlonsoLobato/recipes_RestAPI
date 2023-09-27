@@ -14,11 +14,17 @@ const registerValidation = (data) => {
     password: Joi
             .string()
             .min(6)
-            .required(),     
+            .required(),
+    dateOfBirth: Joi
+            .string()
+            .min(10)
+            .max(10)
+            .required(),          
   });
   return schema.validate(data);
 };
 
+// LOGIN ROUTE (.../users/login) TO BE IMPLEMENTED
 const loginValidation = (data) => {
   const schema = {
     email: Joi

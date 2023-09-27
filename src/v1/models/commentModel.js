@@ -25,10 +25,10 @@ const commentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  // userId: {
-  //   type: String,
-  //   required: true,
-  // },
+  userId: {
+    type: String,
+    required: true,
+  },
   recipeId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,

@@ -57,6 +57,7 @@ const getOneUser = async (req, res) => {
 
 const createNewUser = async (req, res) => {
   const { body } = req;
+  // Validate user input
   const { error } = userValidation.registerValidation(body);
   if (error) {
     res
@@ -72,6 +73,7 @@ const createNewUser = async (req, res) => {
       name: body.name,
       email: body.email,
       password: body.password,
+      dateOfBirth: body.dateOfBirth,
     }
     try {
       const createdUser = await userService.createNewUser(newUser);
@@ -97,31 +99,33 @@ const updateOneUser = async (req, res) => {
     body,
     params: { userId },
   } = req;
-  if (Object.keys(body).length === 0) {
+  // Validate user input
+  const { error } = userValidation.registerValidation(body);
+  if (error) {
     res
       .status(400)
       .json({
         status: "FAILED",
         data: {
-          error: "The request body is empty. Please provide data for the update."
+          error: error.details[0].message
         }
       });
-    return;
-  }
-  try {
-    const updatedUser = await userService.updateOneUser(userId, body);
-    res
-    .json({ 
-      status: "OK", 
-      data: updatedUser 
-    });
-  } catch (error) {
-    res
-    .status(error?.status || 500)
-    .json({ 
-      status: "FAILED", 
-      data: { error: error?.message || error } 
-    });
+  } else {
+    try {
+      const updatedUser = await userService.updateOneUser(userId, body);
+      res
+      .json({ 
+        status: "OK", 
+        data: updatedUser 
+      });
+    } catch (error) {
+      res
+      .status(error?.status || 500)
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
+    }
   }
 };
 
