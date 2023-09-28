@@ -31,7 +31,7 @@ const commentSchema = new mongoose.Schema({
   },
   recipeId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',                            // Double check this 'ref' key (recommended by chatgpt)
+    ref: 'User',                            // Double check this 'ref' key (recommended by chatgpt). Should this be in userId instead of recipeId ?
     required: true,
   },
 });

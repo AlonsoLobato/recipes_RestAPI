@@ -176,11 +176,13 @@ const loginUser = async (req, res) => {
       });
   } else {
     try {
-      await userService.loginUser(body);
+      const token = await userService.loginUser(body);
       res
         .status(200)
+        .header('auth-token', token)
         .json({ 
-          status: "Logged in successfully" 
+          status: "Logged in successfully",
+          data: token,
         });
     } catch (error) {
       res

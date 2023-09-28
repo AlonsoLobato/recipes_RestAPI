@@ -60,6 +60,7 @@ const getOneComment = async (req, res) => {
 const createNewCommentForRecipe = async (req, res) => {
   const {
     body,
+    user,
     params: { recipeId },
   } = req;
   if ( !body.comment ) {
@@ -79,6 +80,7 @@ const createNewCommentForRecipe = async (req, res) => {
     dislike: body.dislike || false,
     favorite: body.favorite || false,
     recipeId: recipeId,
+    userId: user,
   }
   try {
     const createdComment = await commentService.createNewCommentForRecipe(newComment, recipeId);
