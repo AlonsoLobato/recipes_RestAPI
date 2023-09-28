@@ -31,7 +31,7 @@ npm-debug.log
 
 .DS_Store
 
-# 
+# environment variables
 .env
 
 # private notes about future improvements to the API
