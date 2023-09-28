@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const verifiedRoute = (req, res, next) => {
+const verifyAuthToken = (req, res, next) => {
   const token = req.header('auth-token');
   if (!token) {
     res
@@ -27,5 +27,5 @@ const verifiedRoute = (req, res, next) => {
 }
 
 module.exports = {
-  verifiedRoute,
+  verifyAuthToken,
 }

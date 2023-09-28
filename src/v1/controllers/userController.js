@@ -195,6 +195,24 @@ const loginUser = async (req, res) => {
   }
 };
 
+const logoutUser = async (req, res) => {
+  try {
+    res
+      .status(200)
+      .header('auth-token', undefined)
+      .json({ 
+        status: "Logged out successfully",
+      });
+  } catch (error) {
+    res
+      .status(error?.status || 500)
+      .json({ 
+        status: "FAILED", 
+        data: { error: error?.message || error } 
+      });
+  }
+}
+
 module.exports = {
   getAllUsers,
   getOneUser,
@@ -202,4 +220,5 @@ module.exports = {
   updateOneUser,
   deleteOneUser,
   loginUser,
+  logoutUser,
 }

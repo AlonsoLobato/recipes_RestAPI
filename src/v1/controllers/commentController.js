@@ -63,40 +63,46 @@ const createNewCommentForRecipe = async (req, res) => {
     user,
     params: { recipeId },
   } = req;
-  if ( !body.comment ) {
+
+  // Ensuring request body includes only allowed fields
+  const allowedFields = ['comment', 'like', 'dislike', 'favorite'];
+  const bodyKeys = Object.keys(body);
+  const disallowedFields = bodyKeys.filter(field => !allowedFields.includes(field));
+
+  if (disallowedFields.length > 0) {
     res
       .status(400)
       .json({
         status: "FAILED",
         data: {
-          error: "One of the following keys is missing or is empty in request body: 'comment'" 
-        },
+          error: `Invalid fields found in the request body: ${disallowedFields.join(', ')}`
+        }
       });
-    return;  
-  }
-  const newComment = {
-    comment: body.comment,
-    like: body.like || false,
-    dislike: body.dislike || false,
-    favorite: body.favorite || false,
-    recipeId: recipeId,
-    userId: user,
-  }
-  try {
-    const createdComment = await commentService.createNewCommentForRecipe(newComment, recipeId);
-    res
-      .status(201)
-      .json({ 
-        status: "OK", 
-        data: createdComment,
-      });
-  } catch (error) {
-    res
-      .status(error?.status || 500)
-      .json({ 
-        status: "FAILED", 
-        data: { error: error?.message || error } 
-      });
+  } else {
+    const newComment = {
+      comment: body.comment,
+      like: body.like || false,
+      dislike: body.dislike || false,
+      favorite: body.favorite || false,
+      recipeId: recipeId,
+      userId: user._id,
+    }
+    try {
+      const createdComment = await commentService.createNewCommentForRecipe(newComment, recipeId);
+      res
+        .status(201)
+        .json({ 
+          status: "OK", 
+          data: createdComment,
+        });
+    } catch (error) {
+      res
+        .status(error?.status || 500)
+        .json({ 
+          status: "FAILED", 
+          data: { error: error?.message || error } 
+        });
+    }
   }
 };
 
@@ -105,7 +111,13 @@ const updateOneComment = async (req, res) => {
     body,
     params: { commentId }, 
   } = req;
-  if (Object.keys(body).length === 0) {
+
+  // Ensuring request body includes only allowed fields
+  const bodyKeys = Object.keys(body);
+  const allowedFields = ['comment', 'like', 'dislike', 'favorite'];
+  const disallowedFields = bodyKeys.filter(field => !allowedFields.includes(field));
+
+  if (bodyKeys.length === 0) {
     res
       .status(400)
       .json({
@@ -115,33 +127,32 @@ const updateOneComment = async (req, res) => {
         }
       });
     return;
-  }
-  if (!commentId) {   // Is this needed?
-    res
-      .status(404)
-      .json({
-        status: "FAILED",
-        data: {
-          error: "The requested update couldn't be completed",
-        },
-      });
-    return;  
-  }
-  try {
-    const updatedComment = await commentService.updateOneComment(commentId, body);
-    res
-      .status(201)
-      .json({ 
-        status: "OK", 
-        data: updatedComment,
-      });
-  } catch (error) {
-    res
-      .status(error?.status || 500)
-      .json({ 
-        status: "FAILED", 
-        data: { error: error?.message || error } 
-      });
+  } else if (disallowedFields.length > 0) {
+      res
+        .status(400)
+        .json({
+          status: "FAILED",
+          data: {
+            error: `Invalid fields found in the request body: ${disallowedFields.join(', ')}`
+          }
+        });
+  } else {
+      try {
+        const updatedComment = await commentService.updateOneComment(commentId, body);
+        res
+          .status(201)
+          .json({ 
+            status: "OK", 
+            data: updatedComment,
+          });
+      } catch (error) {
+        res
+          .status(error?.status || 500)
+          .json({ 
+            status: "FAILED", 
+            data: { error: error?.message || error } 
+          });
+      }
   }
 };
 
