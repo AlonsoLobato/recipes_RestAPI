@@ -39,6 +39,7 @@ const createNewRecipe = async (newRecipe) => {
     createdAt: new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
     updatedAt: new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
   }
+  
   try {
     const isAlreadyAdded = await Recipe.findOne({ name: recipeToInsert.name });
     if (!!isAlreadyAdded) {
@@ -71,7 +72,8 @@ const updateOneRecipe = async (recipeId, changes) => {
       };
     }
     const updatedRecipe = {
-      ...recipeToUpdate.toObject(),  // Convert Mongoose document to plain JavaScript object
+      // Convert Mongoose document (recipe) to plain JavaScript object
+      ...recipeToUpdate.toObject(),
       ...changes,
       updatedAt: new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
     };

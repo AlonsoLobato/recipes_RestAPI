@@ -1,4 +1,4 @@
-const { status } = require("express/lib/response");
+// const { status } = require("express/lib/response");
 const recipeService = require("../services/recipeService");
 const { json } = require("body-parser");
 
@@ -125,6 +125,7 @@ const updateOneRecipe = async (req, res) => {
   try {
     const updatedRecipe = await recipeService.updateOneRecipe(recipeId, body);
     res
+      .status(200)
       .json({ 
         status: "OK", 
         data: updatedRecipe 
@@ -143,12 +144,14 @@ const deleteOneRecipe = async (req, res) => {
   const {
     params: { recipeId }
   } = req;
+
   try {
     await recipeService.deleteOneRecipe(recipeId);
     res
       .status(204)
       .json({ 
-        status: "OK" 
+        status: "OK",
+        data: "Deleted successfully" 
       });
   } catch (error) {
     res

@@ -35,7 +35,7 @@ const getOneUser = async (userId) => {
   }
 };
 
-const createNewUser = async (newUser) => {
+const registerUser = async (newUser) => {
   const userToInsert = {
     ...newUser,
     createdAt: new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
@@ -51,6 +51,32 @@ const createNewUser = async (newUser) => {
     }
     const createdUser = new User(userToInsert);
     return createdUser.save();
+  } catch (error) {
+    throw { status: error?.status || 500, message: error?.message || error }
+  }
+};
+
+const loginUser = async (userData) => {
+  try {
+    // Checking if email exists
+    const userToLogin = await User.findOne({ email: userData.email });
+    if (!userToLogin) {
+      throw {
+        status: 400,
+        message: `There is no account with the entered email`,
+      };
+    }
+    // Checking if password is correct
+    const validPass = await bcrypt.compare(userData.password, userToLogin.password);
+    if (!validPass) {
+      throw {
+        status: 400,
+        message: `Invalid password`,
+      };
+    }
+    // Create and assign a token
+    const token = jwt.sign({_id: userToLogin._id}, process.env.TOKEN_SECRET);
+    return token;
   } catch (error) {
     throw { status: error?.status || 500, message: error?.message || error }
   }
@@ -109,36 +135,12 @@ const deleteOneUser = async (userId) => {
   }
 };
 
-const loginUser = async (userData) => {
-  try {
-    // Checking if email exists
-    const userToLogin = await User.findOne({ email: userData.email });
-    if (!userToLogin) {
-      throw {
-        status: 400,
-        message: `There is no account with the entered email`,
-      };
-    }
-    // Checking if password is correct
-    const validPass = await bcrypt.compare(userData.password, userToLogin.password);
-    if (!validPass) {
-      throw {
-        status: 400,
-        message: `Invalid password`,
-      };
-    }
-    // Create and assign a token
-    const token = jwt.sign({_id: userToLogin._id}, process.env.TOKEN_SECRET);
-    return token;
-  } catch (error) {
-    throw { status: error?.status || 500, message: error?.message || error }
-  }
-};
+
 
 module.exports = {
   getAllUsers,
   getOneUser,
-  createNewUser,
+  registerUser,
   updateOneUser,
   deleteOneUser,
   loginUser,

@@ -1,4 +1,4 @@
-const { status } = require("express/lib/response");
+// const { status } = require("express/lib/response");
 const commentService = require("../services/commentService");
 const { json } = require("body-parser");
 
@@ -6,6 +6,7 @@ const getAllCommentsForRecipe = async (req, res) => {
   const {
     params: { recipeId },
   } = req;
+
   try {
     const comments = await commentService.getAllCommentsForRecipe(recipeId);
     res
@@ -28,6 +29,7 @@ const getOneComment = async (req, res) => {
   const {
     params: { commentId },
   } = req;
+
   try {
     const comment = await commentService.getOneComment(commentId);
     if(!comment) {
@@ -160,17 +162,7 @@ const deleteOneComment = async (req, res) => {
   const {
     params: { commentId },
   } = req;
-  if (!commentId) {      // Is this needed?
-    res
-      .status(404)
-      .json({
-        status: "FAILED",
-        data: {
-          error: "The requested recipe or comment don't exist",
-        },
-      });
-    return;
-  }
+
   try {
     await commentService.deleteOneComment(commentId);
     res
