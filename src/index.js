@@ -19,7 +19,7 @@ const v1UserRoute = require("./v1/routes/userRoutes");
 // Enables to receive JSON data inside our controllers under 'req.body'
 app.use(bodyParser.json());
 
-// Route Middleware
+// Routes Middleware
 app.use("/api/v1/recipes", v1RecipeRoute);
 app.use("/api/v1/recipes/:recipeId/comments", v1CommentRoute);
 app.use("/api/v1/users", v1UserRoute);
