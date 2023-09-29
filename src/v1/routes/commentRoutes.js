@@ -1,6 +1,8 @@
 const express = require("express");
 const commentController = require("../controllers/commentController");
-const router = express.Router({ mergeParams: true });  // is mergeParams needed?
+
+// mergeParams set to true allows 'child' router access and merge parameters (i.e. _id) from the parent router
+const router = express.Router({ mergeParams: true });
 
 // User authentication middleware
 const privateRoute = require("./verifyAuthToken");

@@ -86,8 +86,9 @@ const registerUser = async (req, res) => {
       res
         .status(201)
         .json({ 
-          status: "OK", 
-          data: createdUser,
+          status: "OK",
+          // for security reasons better not to send all user's data...specially the hashed password!
+          data: { userId: createdUser._id, name: createdUser.name },
       });
     } catch (error) {
       res
