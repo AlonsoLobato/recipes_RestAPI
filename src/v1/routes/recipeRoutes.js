@@ -25,7 +25,59 @@ module.exports = router;
  *   get:
  *     summary: Get all recipes
  *     tags:
- *       - Recipes
+ *       - Retrieve recipe
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: OK
+ *                 data:
+ *                   type: array
+ *                   items: 
+ *                     $ref: "#/components/schemas/Recipe"
+ *       404:
+ *         description: FAILED
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: FAILED
+ *                 data:
+ *                   type: object 
+ *                   properties:
+ *                     error:
+ *                       type: string 
+ *                       example: "The resource you were trying to reach is not found"
+ *       500:
+ *         description: FAILED
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: 
+ *                   type: string
+ *                   example: FAILED
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     error:
+ *                       type: string 
+ *                       example: "Application failed to process the request"
+ *   post:
+ *     summary: Create a new recipe
+ *     tags:
+ *       - Create recipe
  *     parameters:
  *       - in: query
  *         name: TBD
@@ -63,10 +115,11 @@ module.exports = router;
  *                     error:
  *                       type: string 
  *                       example: "Some error message"
- *   post:
- *     summary: Create a new recipe
+ * /api/v1/recipes/:recipeId:
+ *   get:
+ *     summary: Get one recipe by its Id
  *     tags:
- *       - Create recipe
+ *       - Retrieve recipe
  *     parameters:
  *       - in: query
  *         name: TBD

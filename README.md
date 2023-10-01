@@ -4,7 +4,30 @@ This is an Express service that provides authorization functionality and include
 It also uses MongoDB as the database, along with the JSON Web Token (JWT).
 
 ## Project Structure
-- TBD
+- src
+  - v1
+    - controller
+      - commentController.js
+      - recipeController.js
+      - userController.js
+    - docs
+      - swagger.js
+    - models
+      - commentModel.js
+      - recipeModel.js
+      - userModel.js
+    - routes
+      - commnentRoutes.js
+      - recipeRoutes.js
+      - userRoutes.js
+      - verifyAuthToken.js
+    - services
+      - commentService.js
+      - recipeService.js
+      - userService.js
+    - validations
+      - userValidation.js
+  - index.js
 
 ## Prerequisites
 Before running the application, make sure you have the following installed:
@@ -22,6 +45,9 @@ To start the service, run the following command:
 ```shell
 npm start
 ```
+
+## API Routes
+Visit /api/v1/api-docs for API documentation.
 
 ## License
 This project is licensed under the MIT License.
