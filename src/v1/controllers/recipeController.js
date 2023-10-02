@@ -18,7 +18,7 @@ const getAllRecipes = async (req, res) => {
       res
         .status(200)
         .json({
-          status: "OK",
+          status: "OK: Successfully retrieved all recipes",
           data: allRecipes,
         });
     }
@@ -41,7 +41,7 @@ const getOneRecipe = async (req, res) => {
     res
       .status(200)
       .json({ 
-        status: "OK", 
+        status: "OK: Successfully retrieved the recipe with the supplied id", 
         data: recipe 
       });
   } catch (error) {
@@ -93,7 +93,7 @@ const createNewRecipe = async (req, res) => {
     res
       .status(201)
       .json({ 
-        status: "OK", 
+        status: "OK: Successfully created a new recipe", 
         data: createdRecipe,
     });
   } catch (error) {
@@ -127,7 +127,7 @@ const updateOneRecipe = async (req, res) => {
     res
       .status(200)
       .json({ 
-        status: "OK", 
+        status: "OK: Successfully updated recipe information", 
         data: updatedRecipe 
       });
   } catch (error) {
@@ -150,7 +150,7 @@ const deleteOneRecipe = async (req, res) => {
     res
       .status(204)
       .json({ 
-        status: "OK",
+        status: "OK: Successfully deleted specific recipe",
         data: "Deleted successfully" 
       });
   } catch (error) {
