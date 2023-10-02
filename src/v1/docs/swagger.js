@@ -8,7 +8,7 @@ const options = {
     info: { title: "Cooking recipes API", version: "1.0.0" },
   },
   // Define your API operations here:
-  apis: ["./src/v1/routes/recipeRoutes.js", "./src/v1/services/recipeService.js", "./src/v1/models/recipeModel.js"],
+  apis: ["./src/v1/routes/recipeRoutes.js", "./src/v1/models/recipeModel.js"],
 };
 
 // Docs in JSON format
