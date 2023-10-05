@@ -16,7 +16,10 @@ dotenv.config();
 const { swaggerDocs: V1SwaggerDocs } = require("./v1/docs/swagger");
 
 // Defines port
-const PORT = process.env.PORT || 3000; 
+const PORT = process.env.PORT || 3000;
+
+// Determines if app runs in production or development
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Connect to DB
 mongoose.connect(process.env.DB_CONNECT);
@@ -34,8 +37,12 @@ app.use("/api/v1/recipes", v1RecipeRoute);
 app.use("/api/v1/recipes/:recipeId/comments", v1CommentRoute);
 app.use("/api/v1/users", v1UserRoute);
 
-app.listen(PORT, () => { 
-    console.log(`Server up and running - API listening on port ${PORT}`);
+app.listen(PORT, () => {
+    if (NODE_ENV === 'development') {
+        console.log(`Server up and running - API listening on port ${PORT} (Development Mode)`);
+    } else {
+        console.log(`Server up and running (Production Mode)`);
+    }
     V1SwaggerDocs(app, PORT);
 });
 
