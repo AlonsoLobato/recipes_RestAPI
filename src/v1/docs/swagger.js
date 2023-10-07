@@ -1,3 +1,4 @@
+// This library reads your JSDoc-annotated source code and generates an OpenAPI (Swagger) specification
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
