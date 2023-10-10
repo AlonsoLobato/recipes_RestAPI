@@ -1,7 +1,6 @@
 # Cooking recipes API with NodeJS and ExpressJS
 
-This is an Express service that provides authorization functionality and includes separate folders for users and products.
-It also uses MongoDB as the database, along with the JSON Web Token (JWT).
+REST API server that provides access to cooking recipes. Built with Node.JS, using Express for HTTP and route handling and Nginx as reverse proxy. Uses MongoDB as the database and is deployed in an AWS EC2 instance.
 
 ## Project Structure
 - src
