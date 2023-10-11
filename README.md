@@ -45,7 +45,7 @@ To start the service, run the following command:
 npm start
 ```
 
-## API Routes
+## API Endpoints
 Visit /api/v1/api-docs for API documentation.
 
 ## License
