@@ -1,6 +1,6 @@
 # Cooking recipes API with NodeJS and ExpressJS
 
-REST API server that provides access to cooking recipes. Give access to three resources: Recipes, Users and Comments.Built with Node.JS, using Express for HTTP and route handling and Nginx as reverse proxy. Uses MongoDB as the database and is deployed in an AWS EC2 instance.
+REST API server that provides access to cooking recipes. Give access to three resources: Recipes, Users and Comments. Built with Node.JS, using Express for HTTP and route handling and Nginx as reverse proxy. Uses MongoDB as the database and is deployed in an AWS EC2 instance.
 
 ## Project Structure
 - src
@@ -46,7 +46,7 @@ npm start
 ```
 
 ## API Endpoints
-GET /api/v1/api-docs route for API endpoints documentation.
+/api/v1/api-docs for API endpoints documentation.
 
 ## License
 This project is licensed under the MIT License.
