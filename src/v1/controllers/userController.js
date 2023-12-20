@@ -218,8 +218,6 @@ const deleteOneUser = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   getAllUsers,
   getOneUser,
