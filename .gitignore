@@ -35,4 +35,4 @@ npm-debug.log
 .env
 
 # private notes about future improvements to the API
-futureImprovements.txt
+futureImprovements.md
