@@ -29,9 +29,11 @@ REST API server that provides access to cooking recipes. Give access to three re
   - index.js
 
 ## Prerequisites
-Before running the application, make sure you have the following installed:
+Before running the application, make sure you have the following dependencies installed:
 1. NodeJS (v18.13.0)
 2. NPM (v8.19.3)
+
+Also make sure you have a MongoDB database instance (or MongoDB Atlas cluster) running. Create a `.env` file and add a `DB_CONNECT` variable that references your MongoDB database connection string, including your databse username and password.
 
 ## Installation
 1. Clone the repository: `git clone https://github.com/AlonsoLobato/recipes_RestAPI`
@@ -43,6 +45,11 @@ Before running the application, make sure you have the following installed:
 To start the service, run the following command:
 ```shell
 npm start
+```
+
+To run the app in development mode, run the following command:
+```shell
+npm run dev
 ```
 
 ## API Endpoints
